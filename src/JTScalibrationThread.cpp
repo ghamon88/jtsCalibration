@@ -8,8 +8,8 @@ using namespace std;
 JTSCalibrationThread::JTSCalibrationThread(std::string& threadName, std::string& robotName,int periodMilliseconds,
 						std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RL,std::string& inputPortName_LL,
 						std::string& outputPortName_RA,std::string& outputPortName_LA,std::string& outputPortName_RL,std::string& outputPortName_LL,
-						double* GainRA, double* GainLA, double* GainRL, double* GainLL,
-						double* OffsetRA, double* OffsetLA, double* OffsetRL, double* OffsetLL):
+						Vector GainRA, Vector GainLA, Vector GainRL, Vector GainLL,
+						Vector OffsetRA, Vector OffsetLA, Vector OffsetRL, Vector OffsetLL):
 _period(periodMilliseconds),
 _threadName(threadName),
 _robotName(robotName),
@@ -39,42 +39,42 @@ bool JTSCalibrationThread::threadInit() {
     /* initialize variables and create data-structures if needed */
 
     /* opening ports */
-	if(!inputPort_RA.open(("/" + _threadName + "/" + _inputPortName_RA).c_str())){
+	if(!inputPort_RA.open(("/" + _threadName + _inputPortName_RA).c_str())){
 		cout  << ": unable to open input port RA" <<  endl;
 		return false;  // unable to open; let RFModule know so that it won't run
     	}
 
-	if(!inputPort_LA.open(("/" + _threadName + "/" + _inputPortName_LA).c_str())){
+	if(!inputPort_LA.open(("/" + _threadName + _inputPortName_LA).c_str())){
 		cout  << ": unable to open input port LA" <<  endl;
 		return false;  
     	}
 
-	if(!inputPort_RL.open(("/" + _threadName + "/" + _inputPortName_RL).c_str())){
+	if(!inputPort_RL.open(("/" + _threadName + _inputPortName_RL).c_str())){
 		cout  << ": unable to open input port RL" <<  endl;
 		return false;  
     	}
 
-	if(!inputPort_LL.open(("/" + _threadName + "/" + _inputPortName_LL).c_str())){
+	if(!inputPort_LL.open(("/" + _threadName + _inputPortName_LL).c_str())){
 		cout  << ": unable to open input port LL" <<  endl;
 		return false;  
     	}
 
-	if(!outputPort_RA.open(("/" + _threadName + "/" + _outputPortName_RA).c_str())){
+	if(!outputPort_RA.open(("/" + _threadName + _outputPortName_RA).c_str())){
 		cout  << ": unable to open output port RA" <<  endl;
 		return false;  
     	}
 
-	if(!outputPort_LA.open(("/" + _threadName + "/" + _outputPortName_LA).c_str())){
+	if(!outputPort_LA.open(("/" + _threadName + _outputPortName_LA).c_str())){
 		cout  << ": unable to open output port LA" <<  endl;
 		return false;  
     	}
 
-	if(!outputPort_RL.open(("/" + _threadName + "/" + _outputPortName_RL).c_str())){
+	if(!outputPort_RL.open(("/" + _threadName + _outputPortName_RL).c_str())){
 		cout  << ": unable to open output port RL" <<  endl;
 		return false;  
     	}
 
-	if(!outputPort_LL.open(("/" + _threadName + "/" + _outputPortName_LL).c_str())){
+	if(!outputPort_LL.open(("/" + _threadName + _outputPortName_LL).c_str())){
 		cout  << ": unable to open output port LL" <<  endl;
 		return false;  
     	}

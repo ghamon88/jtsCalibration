@@ -14,12 +14,13 @@ using namespace yarp::os;
 int main(int argc, char **argv)
 {
     ResourceFinder *rf = new ResourceFinder;
-    
+
     rf->setVerbose(true);
     rf->setDefaultConfigFile("default.ini");         //default config file name.
-    rf->setDefaultContext("app/conf"); //when no parameters are given to the module this is the default context
+    rf->setDefaultContext("jtsCalibration/conf"); //when no parameters are given to the module this is the default context
+
     rf->configure("ICUB_ROOT",argc,argv);
-    
+
     if (rf->check("help"))
     {
         std::cout<< "Possible parameters" << std::endl << std::endl;
@@ -30,7 +31,7 @@ int main(int argc, char **argv)
         std::cout<< "\t--local            :Prefix of the ports opened by the module. Set to the module name by default, i.e. JTScalibration." << std::endl;
         return 0;
     }
-    
+
     Network yarp;
     
     if (!yarp.checkNetwork())
@@ -41,6 +42,6 @@ int main(int argc, char **argv)
     
     //Creating the module
     JTSCalibrationModule module;
-
+    	        std::cout<<"beginning"<<std::endl;
     return module.runModule(*rf);
 }
