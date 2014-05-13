@@ -23,27 +23,44 @@ using namespace std;
 
 bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {    
 
-	_moduleName=rf.check("name",Value("JTSCalibration"),"Module Name").asString();
-   	
-	_robotName=rf.check("name",Value("iCub"),"Robot Name").asString();
+	_gainRA.resize(3,0.0);
+	_gainLA.resize(3,0.0);
+	_gainRL.resize(3,0.0);
+	_gainLL.resize(3,0.0);
+	_offsetRA.resize(3,0.0);
+	_offsetLA.resize(3,0.0);
+	_offsetRL.resize(3,0.0);
+	_offsetLL.resize(3,0.0);
 
-	_period=rf.check("period",Value("10"),"Period in milliseconds").asInt();
+	Bottle &bGeneral=rf.findGroup("general");
+	macsi::modHelp::readString(bGeneral,"name",_moduleName,"JTSCalib");
+	//_moduleName=rf.check("name",Value("JTSCalib"),"Module Name").asString();
+   macsi::modHelp::readString(bGeneral,"robot",_robotName,"icub");	
+	//_robotName=rf.check("robot",Value("iCub"),"Robot Name").asString();
+	macsi::modHelp::readInt(bGeneral,"period",_period,10);
+	//_period=rf.check("period",Value("10"),"Period in milliseconds").asInt();
 
-        Bottle *initMsg;
-	_gainRA=(double*)malloc(3*sizeof(double));
-	_gainLA=(double*)malloc(3*sizeof(double));
-	_gainRL=(double*)malloc(3*sizeof(double));
-	_gainLL=(double*)malloc(3*sizeof(double));
-	_offsetRA=(double*)malloc(3*sizeof(double));
-	_offsetLA=(double*)malloc(3*sizeof(double));
-	_offsetRL=(double*)malloc(3*sizeof(double));
-	_offsetLL=(double*)malloc(3*sizeof(double));
+	std::cout<<_moduleName<<std::endl;
 
-	initMsg=rf.check("GainRA",Value("(2.52 0.0 3.53)"),"Gain Right Arm JTS").asList();
+	Bottle &bGains=rf.findGroup("gains");
+ 	macsi::modHelp::readVector(bGains,"GainRA",_gainRA,3);
+	macsi::modHelp::readVector(bGains,"GainLA",_gainLA,3);
+	macsi::modHelp::readVector(bGains,"GainRL",_gainRL,3);
+	macsi::modHelp::readVector(bGains,"GainLL",_gainLL,3);
+	macsi::modHelp::readVector(bGains,"OffsetRA",_offsetRA,3);
+	macsi::modHelp::readVector(bGains,"OffsetLA",_offsetLA,3);
+	macsi::modHelp::readVector(bGains,"OffsetRL",_offsetRL,3);
+	macsi::modHelp::readVector(bGains,"OffsetLL",_offsetLL,3);
+
+	std::cout<<"gains et offsets ok"<<std::endl;
+/*	initMsg=rf.check("GainRA",Value("(2.52 0.0 3.53)"),"Gain Right Arm JTS").asList();
+			std::cout<<initMsg<<std::endl;
 	for(int i=0; i<initMsg->size();i++){
+					std::cout<<"configure module"<<std::endl;
 		_gainRA[i]=initMsg->get(i).asDouble();
+					std::cout<<"configure module"<<std::endl;
 	}
-	
+
 	initMsg=rf.check("GainLA",Value("(0.0 0.0 0.0)"),"Gain Left Arm JTS").asList();
 	for(int i=0; i<initMsg->size();i++){
 		_gainLA[i]=initMsg->get(i).asDouble();
@@ -77,63 +94,76 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	initMsg=rf.check("OffsetLL",Value("(0.0 0.0 0.0)"),"Offset Left Leg JTS").asList();
 	for(int i=0; i<initMsg->size();i++){
 		_offsetLL[i]=initMsg->get(i).asDouble();
-	}
-	
+	}*/
+
+	Bottle &bPorts=rf.findGroup("ports");
+
+	macsi::modHelp::readString(bPorts,"InputPortRightArm",inputPortName_RA,"/right_arm/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortLeftArm",inputPortName_LA,"/left_arm/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortRightLeg",inputPortName_RL,"/right_leg/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortLeftLeg",inputPortName_LL,"/left_leg/raw:i");	
+
+	macsi::modHelp::readString(bPorts,"OutputPortRightArm",outputPortName_RA,"/right_arm/calibrated:o");	
+	macsi::modHelp::readString(bPorts,"OutputPortLeftArm",outputPortName_LA,"/left_arm/calibrated:o");	
+	macsi::modHelp::readString(bPorts,"OutputPortRightLeg",outputPortName_RL,"/right_leg/calibrated:o");	
+	macsi::modHelp::readString(bPorts,"OutputPortLeftLeg",outputPortName_LL,"/left_leg/calibrated:o");	
+
+/*
 	inputPortName_RA      = "/";
     	inputPortName_RA      += getName(
                            rf.check("InputPortRightArm", 
-                           Value("right_arm/raw:i"),
+                           Value("/right_arm/raw:i"),
                            "Input raw value right arm JTS port (string)").asString()
                            );
 	inputPortName_LA      = "/";
     	inputPortName_LA      += getName(
                            rf.check("InputPortLeftArm", 
-                           Value("left_arm/raw:i"),
+                           Value("/left_arm/raw:i"),
                            "Input raw value left arm JTS port (string)").asString()
                            );
 
 	inputPortName_RL      = "/";
     	inputPortName_RL      += getName(
                            rf.check("InputPortRightLeg", 
-                           Value("right_leg/raw:i"),
+                           Value("/right_leg/raw:i"),
                            "Input raw value right leg JTS port (string)").asString()
                            );
 	inputPortName_LL      = "/";
     	inputPortName_LL      += getName(
                            rf.check("InputPortLeftLeg", 
-                           Value("left_leg/raw:i"),
+                           Value("/left_leg/raw:i"),
                            "Input raw value left leg JTS port (string)").asString()
                            );
 
     	outputPortName_RA        = "/";
     	outputPortName_RA       += getName(
                            rf.check("OutputPortRightArm", 
-                           Value("right_arm/calibrated:o"),
+                           Value("/right_arm/calibrated:o"),
                            "Output calibrated value right arm JTS port (string)").asString()
                            );
 
 	outputPortName_LA        = "/";
     	outputPortName_LA       += getName(
                            rf.check("OutputPortLeftArm", 
-                           Value("left_arm/calibrated:o"),
+                           Value("/left_arm/calibrated:o"),
                            "Output calibrated value left arm JTS port (string)").asString()
                            );
 
 	outputPortName_RL        = "/";
     	outputPortName_RL       += getName(
                            rf.check("OutputPortRightLeg", 
-                           Value("right_leg/calibrated:o"),
+                           Value("/right_leg/calibrated:o"),
                            "Output calibrated value right leg JTS port (string)").asString()
                            );
 
 	outputPortName_LL        = "/";
     	outputPortName_LL       += getName(
                            rf.check("OutputPortLeftLeg", 
-                           Value("left_leg/calibrated:o"),
+                           Value("/left_leg/calibrated:o"),
                            "Output calibrated value left leg JTS port (string)").asString()
                            );
 
-
+*/
 	
 
     	setName(_moduleName.c_str());

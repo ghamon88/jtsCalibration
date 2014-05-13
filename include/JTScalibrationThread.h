@@ -10,6 +10,9 @@
 #include <yarp/os/all.h>
 #include <iostream>
 #include <yarp/os/Network.h>
+
+using namespace yarp::sig;
+
 /**
  * theoretically, here you should document your class(es) and methods. 
  */
@@ -28,15 +31,15 @@ private:
 	std::string& _outputPortName_RL;
 	std::string& _outputPortName_LL;
 
-	double* _gainRA;
-	double* _gainLA;
-	double* _gainRL;
-	double* _gainLL;
+	Vector _gainRA;
+	Vector _gainLA;
+	Vector _gainRL;
+	Vector _gainLL;
 
-	double* _offsetRA;
-	double* _offsetLA;
-	double* _offsetRL;
-	double* _offsetLL;
+	Vector _offsetRA;
+	Vector _offsetLA;
+	Vector _offsetRL;
+	Vector _offsetLL;
 
 	double calibrated_JTS_RA[3];
 	double calibrated_JTS_LA[3];
@@ -56,8 +59,8 @@ public:
                               	int periodMilliseconds,
                               	std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RL,std::string& inputPortName_LL,
 				std::string& outputPortName_RA,std::string& outputPortName_LA,std::string& outputPortName_RL,std::string& outputPortName_LL,
-				double* GainRA,double* GainLA,double* GainRL,double* GainLL,
-				double* OffsetRA,double* OffsetLA,double* OffsetRL,double* OffsetLL);
+				Vector GainRA,Vector GainLA,Vector GainRL,Vector GainLL,
+				Vector OffsetRA,Vector OffsetLA,Vector OffsetRL,Vector OffsetLL);
 
    /**
     * destructor.

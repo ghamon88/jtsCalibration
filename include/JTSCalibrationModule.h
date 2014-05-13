@@ -9,10 +9,13 @@
 #include <yarp/os/RFModule.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/Thread.h>
- 
+#include <yarp/sig/Vector.h>
+
+#include "modHelp.h"
 // within project includes  
 #include "JTScalibrationThread.h"
 
+using namespace yarp::sig;
 /**
  * here you need to document your classes.
  */
@@ -33,17 +36,7 @@ class JTSCalibrationModule : public yarp::os::RFModule {
       
     	std::string handlerPortName;
 
-    	/*double _gainRA[3];
-	double _gainLA[3];
-	double _gainRL[3];
-	double _gainLL[3];
-
-	double _offsetRA[3];
-	double _offsetLA[3];
-	double _offsetRL[3];
-	double _offsetLL[3];*/
-	
-	double* _gainRA;
+	/*double* _gainRA;
 	double* _gainLA;
 	double* _gainRL;
 	double* _gainLL;
@@ -51,8 +44,17 @@ class JTSCalibrationModule : public yarp::os::RFModule {
 	double* _offsetRA;
 	double* _offsetLA;
 	double* _offsetRL;
-	double* _offsetLL;
+	double* _offsetLL;*/
     
+	Vector _gainRA;
+	Vector _gainLA;
+	Vector _gainRL;
+	Vector _gainLL;
+
+	Vector _offsetRA;
+	Vector _offsetLA;
+	Vector _offsetRL;
+	Vector _offsetLL;
 
     yarp::os::Port handlerPort;      //a port to handle messages 
 
