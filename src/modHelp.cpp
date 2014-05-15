@@ -16,7 +16,8 @@
 //#include <yarp/dev/ControlBoardInterfaces.h>
 //#include <yarp/dev/CartesianControl.h>
 //#include <deque>
-#include "/home/icub/software/src/iCub/main/src/libraries/ctrlLib/include/iCub/ctrl/math.h"
+//#include "/home/icub/software/src/iCub/main/src/libraries/ctrlLib/include/iCub/ctrl/math.h"
+#include "math.h"
 #include <limits.h>
 #include <string>
 #include <fstream>
