@@ -8,14 +8,8 @@
 */
 
 #include "modHelp.h"
-//#include <yarp/os/all.h>
 #include <yarp/sig/Vector.h>
 #include <yarp/sig/Matrix.h>
-//#include <yarp/dev/PolyDriver.h>
-//#include <yarp/dev/Drivers.h>
-//#include <yarp/dev/ControlBoardInterfaces.h>
-//#include <yarp/dev/CartesianControl.h>
-//#include <deque>
 //#include "/home/icub/software/src/iCub/main/src/libraries/ctrlLib/include/iCub/ctrl/math.h"
 #include "math.h"
 #include <limits.h>

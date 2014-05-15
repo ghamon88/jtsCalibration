@@ -6,7 +6,7 @@
 #ifndef _JTSCALIBRATION_THREAD_H_
 #define _JTSCALIBRATION_THREAD_H_
 
-#include <yarp/sig/all.h>
+#include <yarp/sig/Vector.h>
 #include <yarp/os/all.h>
 #include <iostream>
 #include <yarp/os/Network.h>
