@@ -131,7 +131,7 @@ void JTSCalibrationThread::run() {
     
 
     		Bottle* in_LL;
-    		in_LA=inputPort_LL.read(true);
+    		in_LL=inputPort_LL.read(true);
     		if (in_LL==NULL) {
       			fprintf(stderr, "Failed to read left arm JTS values\n");
       			return;
