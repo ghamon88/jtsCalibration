@@ -1,0 +1,146 @@
+<application>
+<name>Joint Torque Sensor Calibration - macsi03 </name>
+<dependencies>
+	<port>/icub/joint_torque_sensor/right_arm/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_arm/analog:o</port>
+	<port>/icub/joint_torque_sensor/right_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_leg/analog:o</port>
+</dependencies>
+
+<!-- JTS module -->
+<module>
+	<name>jtsCalibration</name>
+	<!-- <parameters>--name /dump_UB_dyn_v2/head --type bottle --rxTime</parameters> -->
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>joint-torque-sensors-calibration</tag>
+</module>
+
+<!-- dump log raw-->
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightARM/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RA-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftARM/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LA-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LL-jts-raw</tag>
+</module>
+<!-- dump log calibrated-->
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightARM/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RA-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftARM/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LA-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LL-jts-calibrated</tag>
+</module>
+
+<!-- JTS connections -->
+<connection>
+  <from>/icub/joint_torque_sensor/right_arm/analog:o</from>
+  <to>/JTSCalibration/right_arm/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_arm/analog:o</from>
+  <to>/JTSCalibration/left_arm/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_leg/analog:o</from>
+  <to>/JTSCalibration/right_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_leg/analog:o</from>
+  <to>/JTSCalibration/left_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+
+<!-- datadumper connections -->
+<connection>
+  <from>/icub/joint_torque_sensor/right_arm/analog:o</from>
+  <to>/dump_JTS/rightARM/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_arm/analog:o</from>
+  <to>/dump_JTS/leftARM/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_leg/analog:o</from>
+  <to>/dump_JTS/rightLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_leg/analog:o</from>
+  <to>/dump_JTS/leftLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+
+<connection>
+  <from>/JTSCalibration/right_arm/calibrated:o</from>
+  <to>/dump_JTS/rightARM/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/left_arm/calibrated:o</from>
+  <to>/dump_JTS/leftARM/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/right_leg/calibrated:o</from>
+  <to>/dump_JTS/rightLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/left_leg/calibrated:o</from>
+  <to>/dump_JTS/leftLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+
+
+</application>
+
+
