@@ -15,155 +15,59 @@ using namespace std;
  * equivalent of the "open" method.
  */
 
-/*namespace JTSCalibration {
-    JTSCalibrationModule::JTSCalibrationModule()
-    {
-        
-    }*/
-
 bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {    
 
 	_gainRA.resize(3,0.0);
 	_gainLA.resize(3,0.0);
-	_gainRL.resize(3,0.0);
-	_gainLL.resize(3,0.0);
+	_gainRUL.resize(3,0.0);
+	_gainLUL.resize(3,0.0);
+	_gainRLL.resize(3,0.0);
+	_gainLLL.resize(3,0.0);
 	_offsetRA.resize(3,0.0);
 	_offsetLA.resize(3,0.0);
-	_offsetRL.resize(3,0.0);
-	_offsetLL.resize(3,0.0);
+	_offsetRUL.resize(3,0.0);
+	_offsetLUL.resize(3,0.0);
+	_offsetRLL.resize(3,0.0);
+	_offsetLLL.resize(3,0.0);
 
 	Bottle &bGeneral=rf.findGroup("general");
 	macsi::modHelp::readString(bGeneral,"name",_moduleName,"JTSCalib");
-	//_moduleName=rf.check("name",Value("JTSCalib"),"Module Name").asString();
    macsi::modHelp::readString(bGeneral,"robot",_robotName,"icub");	
-	//_robotName=rf.check("robot",Value("iCub"),"Robot Name").asString();
 	macsi::modHelp::readInt(bGeneral,"period",_period,10);
-	//_period=rf.check("period",Value("10"),"Period in milliseconds").asInt();
 
 	std::cout<<_moduleName<<std::endl;
 
 	Bottle &bGains=rf.findGroup("gains");
  	macsi::modHelp::readVector(bGains,"GainRA",_gainRA,3);
 	macsi::modHelp::readVector(bGains,"GainLA",_gainLA,3);
-	macsi::modHelp::readVector(bGains,"GainRL",_gainRL,3);
-	macsi::modHelp::readVector(bGains,"GainLL",_gainLL,3);
+	macsi::modHelp::readVector(bGains,"GainRUL",_gainRUL,3);
+	macsi::modHelp::readVector(bGains,"GainLUL",_gainLUL,3);
+	macsi::modHelp::readVector(bGains,"GainRLL",_gainRLL,3);
+	macsi::modHelp::readVector(bGains,"GainLLL",_gainLLL,3);
 	macsi::modHelp::readVector(bGains,"OffsetRA",_offsetRA,3);
 	macsi::modHelp::readVector(bGains,"OffsetLA",_offsetLA,3);
-	macsi::modHelp::readVector(bGains,"OffsetRL",_offsetRL,3);
-	macsi::modHelp::readVector(bGains,"OffsetLL",_offsetLL,3);
+	macsi::modHelp::readVector(bGains,"OffsetRUL",_offsetRUL,3);
+	macsi::modHelp::readVector(bGains,"OffsetLUL",_offsetLUL,3);
+	macsi::modHelp::readVector(bGains,"OffsetRLL",_offsetRLL,3);
+	macsi::modHelp::readVector(bGains,"OffsetLLL",_offsetLLL,3);
 
 	std::cout<<"gains et offsets ok"<<std::endl;
-/*	initMsg=rf.check("GainRA",Value("(2.52 0.0 3.53)"),"Gain Right Arm JTS").asList();
-			std::cout<<initMsg<<std::endl;
-	for(int i=0; i<initMsg->size();i++){
-					std::cout<<"configure module"<<std::endl;
-		_gainRA[i]=initMsg->get(i).asDouble();
-					std::cout<<"configure module"<<std::endl;
-	}
-
-	initMsg=rf.check("GainLA",Value("(0.0 0.0 0.0)"),"Gain Left Arm JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_gainLA[i]=initMsg->get(i).asDouble();
-	}
-
-	initMsg=rf.check("GainRL",Value("(0.0 0.0 0.0)"),"Gain Right Leg JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_gainRL[i]=initMsg->get(i).asDouble();
-	}
-
-	initMsg=rf.check("GainLL",Value("(0.0 0.0 0.0)"),"Gain Left Leg JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_gainLL[i]=initMsg->get(i).asDouble();
-	}
-
-	initMsg=rf.check("OffsetRA",Value("(2.52 0.0 3.53)"),"Offset Right Arm JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_offsetRA[i]=initMsg->get(i).asDouble();
-	}
-	
-	initMsg=rf.check("OffsetLA",Value("(0.0 0.0 0.0)"),"Offset Left Arm JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_offsetLA[i]=initMsg->get(i).asDouble();
-	}
-
-	initMsg=rf.check("OffsetRL",Value("(0.0 0.0 0.0)"),"Offset Right Leg JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_offsetRL[i]=initMsg->get(i).asDouble();
-	}
-
-	initMsg=rf.check("OffsetLL",Value("(0.0 0.0 0.0)"),"Offset Left Leg JTS").asList();
-	for(int i=0; i<initMsg->size();i++){
-		_offsetLL[i]=initMsg->get(i).asDouble();
-	}*/
 
 	Bottle &bPorts=rf.findGroup("ports");
 
 	macsi::modHelp::readString(bPorts,"InputPortRightArm",inputPortName_RA,"/right_arm/raw:i");	
 	macsi::modHelp::readString(bPorts,"InputPortLeftArm",inputPortName_LA,"/left_arm/raw:i");	
-	macsi::modHelp::readString(bPorts,"InputPortRightLeg",inputPortName_RL,"/right_leg/raw:i");	
-	macsi::modHelp::readString(bPorts,"InputPortLeftLeg",inputPortName_LL,"/left_leg/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortRightUpperLeg",inputPortName_RUL,"/right_upper_leg/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortLeftUpperLeg",inputPortName_LUL,"/left_upper_leg/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortRightLowerLeg",inputPortName_RLL,"/right_lower_leg/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortLeftLowerLeg",inputPortName_LLL,"/left_lower_leg/raw:i");	
 
 	macsi::modHelp::readString(bPorts,"OutputPortRightArm",outputPortName_RA,"/right_arm/calibrated:o");	
 	macsi::modHelp::readString(bPorts,"OutputPortLeftArm",outputPortName_LA,"/left_arm/calibrated:o");	
-	macsi::modHelp::readString(bPorts,"OutputPortRightLeg",outputPortName_RL,"/right_leg/calibrated:o");	
-	macsi::modHelp::readString(bPorts,"OutputPortLeftLeg",outputPortName_LL,"/left_leg/calibrated:o");	
-
-/*
-	inputPortName_RA      = "/";
-    	inputPortName_RA      += getName(
-                           rf.check("InputPortRightArm", 
-                           Value("/right_arm/raw:i"),
-                           "Input raw value right arm JTS port (string)").asString()
-                           );
-	inputPortName_LA      = "/";
-    	inputPortName_LA      += getName(
-                           rf.check("InputPortLeftArm", 
-                           Value("/left_arm/raw:i"),
-                           "Input raw value left arm JTS port (string)").asString()
-                           );
-
-	inputPortName_RL      = "/";
-    	inputPortName_RL      += getName(
-                           rf.check("InputPortRightLeg", 
-                           Value("/right_leg/raw:i"),
-                           "Input raw value right leg JTS port (string)").asString()
-                           );
-	inputPortName_LL      = "/";
-    	inputPortName_LL      += getName(
-                           rf.check("InputPortLeftLeg", 
-                           Value("/left_leg/raw:i"),
-                           "Input raw value left leg JTS port (string)").asString()
-                           );
-
-    	outputPortName_RA        = "/";
-    	outputPortName_RA       += getName(
-                           rf.check("OutputPortRightArm", 
-                           Value("/right_arm/calibrated:o"),
-                           "Output calibrated value right arm JTS port (string)").asString()
-                           );
-
-	outputPortName_LA        = "/";
-    	outputPortName_LA       += getName(
-                           rf.check("OutputPortLeftArm", 
-                           Value("/left_arm/calibrated:o"),
-                           "Output calibrated value left arm JTS port (string)").asString()
-                           );
-
-	outputPortName_RL        = "/";
-    	outputPortName_RL       += getName(
-                           rf.check("OutputPortRightLeg", 
-                           Value("/right_leg/calibrated:o"),
-                           "Output calibrated value right leg JTS port (string)").asString()
-                           );
-
-	outputPortName_LL        = "/";
-    	outputPortName_LL       += getName(
-                           rf.check("OutputPortLeftLeg", 
-                           Value("/left_leg/calibrated:o"),
-                           "Output calibrated value left leg JTS port (string)").asString()
-                           );
-
-*/
+	macsi::modHelp::readString(bPorts,"OutputPortRightUpperLeg",outputPortName_RUL,"/right_upper_leg/calibrated:o");	
+	macsi::modHelp::readString(bPorts,"OutputPortLeftUpperLeg",outputPortName_LUL,"/left_upper_leg/calibrated:o");	
+	macsi::modHelp::readString(bPorts,"OutputPortRightLowerLeg",outputPortName_RLL,"/right_lower_leg/calibrated:o");	
+	macsi::modHelp::readString(bPorts,"OutputPortLeftLowerLeg",outputPortName_LLL,"/left_lower_leg/calibrated:o");
 	
 
     	setName(_moduleName.c_str());
@@ -187,10 +91,10 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 
 	//--------------------------CONTROL THREAD--------------------------
         _jtscalibrationThread = new JTSCalibrationThread(_moduleName,_robotName,_period,
-						inputPortName_RA,inputPortName_LA,inputPortName_RL,inputPortName_LL,
-						outputPortName_RA,outputPortName_LA,outputPortName_RL,outputPortName_LL,
-                                                _gainRA,_gainLA,_gainRL,_gainLL,
-						_offsetRA,_offsetLA,_offsetRL,_offsetLL);
+						inputPortName_RA,inputPortName_LA,inputPortName_RUL,inputPortName_LUL,inputPortName_RLL,inputPortName_LLL,
+						outputPortName_RA,outputPortName_LA,outputPortName_RUL,outputPortName_LUL,outputPortName_RLL,outputPortName_LLL,
+                                                _gainRA,_gainLA,_gainRUL,_gainLUL,_gainRLL,_gainLLL,
+						_offsetRA,_offsetLA,_offsetRUL,_offsetLUL,_offsetRLL,_offsetLLL);
         if (!_jtscalibrationThread || !_jtscalibrationThread->start()) {
           //  error_out("Error while initializing control thread. Closing module.\n");
             return false;
