@@ -42,6 +42,6 @@ int main(int argc, char **argv)
     
     //Creating the module
     JTSCalibrationModule module;
-    	        std::cout<<"beginning"<<std::endl;
+    std::cout<<"beginning"<<std::endl;
     return module.runModule(*rf);
 }

@@ -19,16 +19,18 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 
 	_gainRA.resize(3,0.0);
 	_gainLA.resize(3,0.0);
-	_gainRUL.resize(3,0.0);
-	_gainLUL.resize(3,0.0);
-	_gainRLL.resize(3,0.0);
-	_gainLLL.resize(3,0.0);
+	_gainRUL.resize(2,0.0);
+	_gainLUL.resize(2,0.0);
+	_gainRLL.resize(2,0.0);
+	_gainLLL.resize(2,0.0);
+	_gainT.resize(2,0.0);
 	_offsetRA.resize(3,0.0);
 	_offsetLA.resize(3,0.0);
-	_offsetRUL.resize(3,0.0);
-	_offsetLUL.resize(3,0.0);
-	_offsetRLL.resize(3,0.0);
-	_offsetLLL.resize(3,0.0);
+	_offsetRUL.resize(2,0.0);
+	_offsetLUL.resize(2,0.0);
+	_offsetRLL.resize(2,0.0);
+	_offsetLLL.resize(2,0.0);
+	_offsetT.resize(2,0.0);
 
 	Bottle &bGeneral=rf.findGroup("general");
 	macsi::modHelp::readString(bGeneral,"name",_moduleName,"JTSCalib");
@@ -40,16 +42,18 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	Bottle &bGains=rf.findGroup("gains");
  	macsi::modHelp::readVector(bGains,"GainRA",_gainRA,3);
 	macsi::modHelp::readVector(bGains,"GainLA",_gainLA,3);
-	macsi::modHelp::readVector(bGains,"GainRUL",_gainRUL,3);
-	macsi::modHelp::readVector(bGains,"GainLUL",_gainLUL,3);
-	macsi::modHelp::readVector(bGains,"GainRLL",_gainRLL,3);
-	macsi::modHelp::readVector(bGains,"GainLLL",_gainLLL,3);
+	macsi::modHelp::readVector(bGains,"GainRUL",_gainRUL,2);
+	macsi::modHelp::readVector(bGains,"GainLUL",_gainLUL,2);
+	macsi::modHelp::readVector(bGains,"GainRLL",_gainRLL,2);
+	macsi::modHelp::readVector(bGains,"GainLLL",_gainLLL,2);
+	macsi::modHelp::readVector(bGains,"GainT",_gainT,2);
 	macsi::modHelp::readVector(bGains,"OffsetRA",_offsetRA,3);
 	macsi::modHelp::readVector(bGains,"OffsetLA",_offsetLA,3);
-	macsi::modHelp::readVector(bGains,"OffsetRUL",_offsetRUL,3);
-	macsi::modHelp::readVector(bGains,"OffsetLUL",_offsetLUL,3);
-	macsi::modHelp::readVector(bGains,"OffsetRLL",_offsetRLL,3);
-	macsi::modHelp::readVector(bGains,"OffsetLLL",_offsetLLL,3);
+	macsi::modHelp::readVector(bGains,"OffsetRUL",_offsetRUL,2);
+	macsi::modHelp::readVector(bGains,"OffsetLUL",_offsetLUL,2);
+	macsi::modHelp::readVector(bGains,"OffsetRLL",_offsetRLL,2);
+	macsi::modHelp::readVector(bGains,"OffsetLLL",_offsetLLL,2);
+	macsi::modHelp::readVector(bGains,"OffsetT",_offsetT,2);
 
 	std::cout<<"gains et offsets ok"<<std::endl;
 
@@ -61,6 +65,7 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	macsi::modHelp::readString(bPorts,"InputPortLeftUpperLeg",inputPortName_LUL,"/left_upper_leg/raw:i");	
 	macsi::modHelp::readString(bPorts,"InputPortRightLowerLeg",inputPortName_RLL,"/right_lower_leg/raw:i");	
 	macsi::modHelp::readString(bPorts,"InputPortLeftLowerLeg",inputPortName_LLL,"/left_lower_leg/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortTorso",inputPortName_T,"/torso/raw:i");	
 
 	macsi::modHelp::readString(bPorts,"OutputPortRightArm",outputPortName_RA,"/right_arm/calibrated:o");	
 	macsi::modHelp::readString(bPorts,"OutputPortLeftArm",outputPortName_LA,"/left_arm/calibrated:o");	
@@ -68,6 +73,7 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	macsi::modHelp::readString(bPorts,"OutputPortLeftUpperLeg",outputPortName_LUL,"/left_upper_leg/calibrated:o");	
 	macsi::modHelp::readString(bPorts,"OutputPortRightLowerLeg",outputPortName_RLL,"/right_lower_leg/calibrated:o");	
 	macsi::modHelp::readString(bPorts,"OutputPortLeftLowerLeg",outputPortName_LLL,"/left_lower_leg/calibrated:o");
+	macsi::modHelp::readString(bPorts,"OutputPortTorso",outputPortName_T,"/torso/calibrated:o");
 	
 
     	setName(_moduleName.c_str());
@@ -91,10 +97,10 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 
 	//--------------------------CONTROL THREAD--------------------------
         _jtscalibrationThread = new JTSCalibrationThread(_moduleName,_robotName,_period,
-						inputPortName_RA,inputPortName_LA,inputPortName_RUL,inputPortName_LUL,inputPortName_RLL,inputPortName_LLL,
-						outputPortName_RA,outputPortName_LA,outputPortName_RUL,outputPortName_LUL,outputPortName_RLL,outputPortName_LLL,
-                                                _gainRA,_gainLA,_gainRUL,_gainLUL,_gainRLL,_gainLLL,
-						_offsetRA,_offsetLA,_offsetRUL,_offsetLUL,_offsetRLL,_offsetLLL);
+						inputPortName_RA,inputPortName_LA,inputPortName_RUL,inputPortName_LUL,inputPortName_RLL,inputPortName_LLL,inputPortName_T,
+						outputPortName_RA,outputPortName_LA,outputPortName_RUL,outputPortName_LUL,outputPortName_RLL,outputPortName_LLL,outputPortName_T,
+                                                _gainRA,_gainLA,_gainRUL,_gainLUL,_gainRLL,_gainLLL,_gainT,
+						_offsetRA,_offsetLA,_offsetRUL,_offsetLUL,_offsetRLL,_offsetLLL,_offsetT);
         if (!_jtscalibrationThread || !_jtscalibrationThread->start()) {
           //  error_out("Error while initializing control thread. Closing module.\n");
             return false;

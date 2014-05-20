@@ -7,6 +7,7 @@
 	<port>/icub/joint_torque_sensor/left_upper_leg/analog:o</port>
 	<port>/icub/joint_torque_sensor/right_lower_leg/analog:o</port>
 	<port>/icub/joint_torque_sensor/left_lower_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/torso/analog:o</port>
 </dependencies>
 
 <module>
@@ -58,6 +59,13 @@
 	<stdio>macsi03</stdio>
 	<tag>LLL-jts-raw</tag>
 </module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/torso/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>torso-jts-raw</tag>
+</module>
 <!-- dump log calibrated-->
 <module>
 	<name>dataDumper</name>
@@ -101,6 +109,14 @@
 	<stdio>macsi03</stdio>
 	<tag>LLL-jts-calibrated</tag>
 </module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/torso/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>torso-jts-calibrated</tag>
+</module>
+
 
 <!-- JTS connections -->
 <connection>
@@ -131,6 +147,11 @@
 <connection>
   <from>/icub/joint_torque_sensor/left_lower_leg/analog:o</from>
   <to>/JTSCalibration/left_lower_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/torso/analog:o</from>
+  <to>/JTSCalibration/torso/raw:i</to>
   <protocol>udp</protocol>
 </connection>
 
@@ -165,6 +186,11 @@
   <to>/dump_JTS/leftLowerLEG/raw</to>
   <protocol>udp</protocol>
 </connection>
+<connection>
+  <from>/icub/joint_torque_sensor/torso/analog:o</from>
+  <to>/dump_JTS/torso/raw</to>
+  <protocol>udp</protocol>
+</connection>
 
 <connection>
   <from>/JTSCalibration/right_arm/calibrated:o</from>
@@ -194,6 +220,11 @@
 <connection>
   <from>/JTSCalibration/left_lower_leg/calibrated:o</from>
   <to>/dump_JTS/leftLowerLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/torso/calibrated:o</from>
+  <to>/dump_JTS/torso/calibrated</to>
   <protocol>udp</protocol>
 </connection>
 
