@@ -1,22 +1,21 @@
 <application>
-<name>Joint Torque Sensor Calibration - macsi03 </name>
+<name>Joint Torque Sensor Calibration - macsi04 </name>
 <dependencies>
 	<port>/icub/joint_torque_sensor/right_arm/analog:o</port>
 	<port>/icub/joint_torque_sensor/left_arm/analog:o</port>
-	<port>/icub/joint_torque_sensor/right_leg/analog:o</port>
-	<port>/icub/joint_torque_sensor/left_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/right_upper_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_upper_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/right_lower_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_lower_leg/analog:o</port>
 </dependencies>
 
-<!-- JTS module -->
 <module>
 	<name>jtsCalibration</name>
-	<!-- <parameters>--name /dump_UB_dyn_v2/head --type bottle --rxTime</parameters> -->
-	<node>macsi03</node>
+	<node>macsi04</node>
 	<stdio>macsi03</stdio>
-	<tag>joint-torque-sensors-calibration</tag>
+	<tag>jointSensorsCalibration</tag>
 </module>
 
-<!-- dump log raw-->
 <module>
 	<name>dataDumper</name>
 	<parameters>--name /dump_JTS/rightARM/raw --type bottle --rxTime</parameters>
@@ -33,17 +32,31 @@
 </module>
 <module>
 	<name>dataDumper</name>
-	<parameters>--name /dump_JTS/rightLEG/raw --type bottle --rxTime</parameters>
+	<parameters>--name /dump_JTS/rightUpperLEG/raw --type bottle --rxTime</parameters>
 	<node>macsi03</node>
 	<stdio>macsi03</stdio>
-	<tag>RL-jts-raw</tag>
+	<tag>RUL-jts-raw</tag>
 </module>
 <module>
 	<name>dataDumper</name>
-	<parameters>--name /dump_JTS/leftLEG/raw --type bottle --rxTime</parameters>
+	<parameters>--name /dump_JTS/leftUpperLEG/raw --type bottle --rxTime</parameters>
 	<node>macsi03</node>
 	<stdio>macsi03</stdio>
-	<tag>LL-jts-raw</tag>
+	<tag>LUL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightLowerLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RLL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftLowerLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LLL-jts-raw</tag>
 </module>
 <!-- dump log calibrated-->
 <module>
@@ -62,17 +75,31 @@
 </module>
 <module>
 	<name>dataDumper</name>
-	<parameters>--name /dump_JTS/rightLEG/calibrated --type bottle --rxTime</parameters>
+	<parameters>--name /dump_JTS/rightUpperLEG/calibrated --type bottle --rxTime</parameters>
 	<node>macsi03</node>
 	<stdio>macsi03</stdio>
-	<tag>RL-jts-calibrated</tag>
+	<tag>RUL-jts-calibrated</tag>
 </module>
 <module>
 	<name>dataDumper</name>
-	<parameters>--name /dump_JTS/leftLEG/calibrated --type bottle --rxTime</parameters>
+	<parameters>--name /dump_JTS/leftUpperLEG/calibrated --type bottle --rxTime</parameters>
 	<node>macsi03</node>
 	<stdio>macsi03</stdio>
-	<tag>LL-jts-calibrated</tag>
+	<tag>LUL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightLowerLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RLL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftLowerLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LLL-jts-calibrated</tag>
 </module>
 
 <!-- JTS connections -->
@@ -87,13 +114,23 @@
   <protocol>udp</protocol>
 </connection>
 <connection>
-  <from>/icub/joint_torque_sensor/right_leg/analog:o</from>
-  <to>/JTSCalibration/right_leg/raw:i</to>
+  <from>/icub/joint_torque_sensor/right_upper_leg/analog:o</from>
+  <to>/JTSCalibration/right_upper_leg/raw:i</to>
   <protocol>udp</protocol>
 </connection>
 <connection>
-  <from>/icub/joint_torque_sensor/left_leg/analog:o</from>
-  <to>/JTSCalibration/left_leg/raw:i</to>
+  <from>/icub/joint_torque_sensor/left_upper_leg/analog:o</from>
+  <to>/JTSCalibration/left_upper_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_lower_leg/analog:o</from>
+  <to>/JTSCalibration/right_lower_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_lower_leg/analog:o</from>
+  <to>/JTSCalibration/left_lower_leg/raw:i</to>
   <protocol>udp</protocol>
 </connection>
 
@@ -109,13 +146,23 @@
   <protocol>udp</protocol>
 </connection>
 <connection>
-  <from>/icub/joint_torque_sensor/right_leg/analog:o</from>
-  <to>/dump_JTS/rightLEG/raw</to>
+  <from>/icub/joint_torque_sensor/right_upper_leg/analog:o</from>
+  <to>/dump_JTS/rightUpperLEG/raw</to>
   <protocol>udp</protocol>
 </connection>
 <connection>
-  <from>/icub/joint_torque_sensor/left_leg/analog:o</from>
-  <to>/dump_JTS/leftLEG/raw</to>
+  <from>/icub/joint_torque_sensor/left_upper_leg/analog:o</from>
+  <to>/dump_JTS/leftUpperLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_lower_leg/analog:o</from>
+  <to>/dump_JTS/rightLowerLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_lower_leg/analog:o</from>
+  <to>/dump_JTS/leftLowerLEG/raw</to>
   <protocol>udp</protocol>
 </connection>
 
@@ -130,15 +177,26 @@
   <protocol>udp</protocol>
 </connection>
 <connection>
-  <from>/JTSCalibration/right_leg/calibrated:o</from>
-  <to>/dump_JTS/rightLEG/calibrated</to>
+  <from>/JTSCalibration/right_upper_leg/calibrated:o</from>
+  <to>/dump_JTS/rightUpperLEG/calibrated</to>
   <protocol>udp</protocol>
 </connection>
 <connection>
-  <from>/JTSCalibration/left_leg/calibrated:o</from>
-  <to>/dump_JTS/leftLEG/calibrated</to>
+  <from>/JTSCalibration/left_upper_leg/calibrated:o</from>
+  <to>/dump_JTS/leftUpperLEG/calibrated</to>
   <protocol>udp</protocol>
 </connection>
+<connection>
+  <from>/JTSCalibration/right_lower_leg/calibrated:o</from>
+  <to>/dump_JTS/rightLowerLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/left_lower_leg/calibrated:o</from>
+  <to>/dump_JTS/leftLowerLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+
 
 
 </application>

@@ -6,29 +6,37 @@ using namespace std;
 
 					
 JTSCalibrationThread::JTSCalibrationThread(std::string& threadName, std::string& robotName,int periodMilliseconds,
-						std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RL,std::string& inputPortName_LL,
-						std::string& outputPortName_RA,std::string& outputPortName_LA,std::string& outputPortName_RL,std::string& outputPortName_LL,
-						Vector GainRA, Vector GainLA, Vector GainRL, Vector GainLL,
-						Vector OffsetRA, Vector OffsetLA, Vector OffsetRL, Vector OffsetLL):
+						std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RUL,std::string& inputPortName_LUL,std::string& inputPortName_RLL,std::string& inputPortName_LLL,
+						std::string& outputPortName_RA,std::string& outputPortName_LA,std::string& outputPortName_RUL,std::string& outputPortName_LUL,std::string& outputPortName_RLL,std::string& outputPortName_LLL,
+						Vector GainRA, Vector GainLA, Vector GainRUL, Vector GainLUL, Vector GainRLL, Vector GainLLL,
+						Vector OffsetRA, Vector OffsetLA, Vector OffsetRUL, Vector OffsetLUL, Vector OffsetRLL, Vector OffsetLLL):
 _period(periodMilliseconds),
 _threadName(threadName),
 _robotName(robotName),
 _inputPortName_RA(inputPortName_RA),
 _inputPortName_LA(inputPortName_LA),
-_inputPortName_RL(inputPortName_RL),
-_inputPortName_LL(inputPortName_LL),
+_inputPortName_RUL(inputPortName_RUL),
+_inputPortName_LUL(inputPortName_LUL),
+_inputPortName_RLL(inputPortName_RLL),
+_inputPortName_LLL(inputPortName_LLL),
 _outputPortName_RA(outputPortName_RA),
 _outputPortName_LA(outputPortName_LA),
-_outputPortName_RL(outputPortName_RL),
-_outputPortName_LL(outputPortName_LL),
+_outputPortName_RUL(outputPortName_RUL),
+_outputPortName_LUL(outputPortName_LUL),
+_outputPortName_RLL(outputPortName_RLL),
+_outputPortName_LLL(outputPortName_LLL),
 _gainRA(GainRA),
 _gainLA(GainLA),
-_gainRL(GainRL),
-_gainLL(GainLL),
+_gainRUL(GainRUL),
+_gainLUL(GainLUL),
+_gainRLL(GainRLL),
+_gainLLL(GainLLL),
 _offsetRA(OffsetRA),
 _offsetLA(OffsetLA),
-_offsetRL(OffsetRL),
-_offsetLL(OffsetLL)
+_offsetRUL(OffsetRUL),
+_offsetLUL(OffsetLUL),
+_offsetRLL(OffsetRLL),
+_offsetLLL(OffsetLLL)
 {   
 
 }
@@ -49,12 +57,21 @@ bool JTSCalibrationThread::threadInit() {
 		return false;  
     	}
 
-	if(!inputPort_RL.open(("/" + _threadName + _inputPortName_RL).c_str())){
+	if(!inputPort_RUL.open(("/" + _threadName + _inputPortName_RUL).c_str())){
 		cout  << ": unable to open input port RL" <<  endl;
 		return false;  
     	}
 
-	if(!inputPort_LL.open(("/" + _threadName + _inputPortName_LL).c_str())){
+	if(!inputPort_LUL.open(("/" + _threadName + _inputPortName_LUL).c_str())){
+		cout  << ": unable to open input port LL" <<  endl;
+		return false;  
+    	}
+	if(!inputPort_RLL.open(("/" + _threadName + _inputPortName_RLL).c_str())){
+		cout  << ": unable to open input port RL" <<  endl;
+		return false;  
+    	}
+
+	if(!inputPort_LLL.open(("/" + _threadName + _inputPortName_LLL).c_str())){
 		cout  << ": unable to open input port LL" <<  endl;
 		return false;  
     	}
@@ -69,12 +86,23 @@ bool JTSCalibrationThread::threadInit() {
 		return false;  
     	}
 
-	if(!outputPort_RL.open(("/" + _threadName + _outputPortName_RL).c_str())){
+	if(!outputPort_RUL.open(("/" + _threadName + _outputPortName_RUL).c_str())){
 		cout  << ": unable to open output port RL" <<  endl;
 		return false;  
     	}
 
-	if(!outputPort_LL.open(("/" + _threadName + _outputPortName_LL).c_str())){
+	if(!outputPort_LUL.open(("/" + _threadName + _outputPortName_LUL).c_str())){
+		cout  << ": unable to open output port LL" <<  endl;
+		return false;  
+    	}
+
+    	return true;
+	if(!outputPort_RLL.open(("/" + _threadName + _outputPortName_RLL).c_str())){
+		cout  << ": unable to open output port RL" <<  endl;
+		return false;  
+    	}
+
+	if(!outputPort_LLL.open(("/" + _threadName + _outputPortName_LLL).c_str())){
 		cout  << ": unable to open output port LL" <<  endl;
 		return false;  
     	}
@@ -93,95 +121,142 @@ void JTSCalibrationThread::run() {
 		
 		// read the message
     		Bottle* in_RA;
-    		in_RA=inputPort_RA.read(true);
+    		in_RA=inputPort_RA.read(false);
     		if (in_RA==NULL) {
-      			fprintf(stderr, "Failed to read right arm JTS values\n");
-      			return;
+      			//fprintf(stderr, "Failed to read right arm JTS values\n");
+      			//return;
     		}else{
 			for(int i=0; i<3;i++){
 				calibrated_JTS_RA[i]=((*in_RA).get(i).asDouble()-_offsetRA[i])*_gainRA[i];
 			}
-    			cout<<"Right Arm Joint Torque Sensors calibrated values = "<< calibrated_JTS_RA[0]<< " "<<calibrated_JTS_RA[1]<< " "<<calibrated_JTS_RA[2]<<endl;
+    			//cout<<"Right Arm Joint Torque Sensors calibrated values = "<< calibrated_JTS_RA[0]<< " "<<calibrated_JTS_RA[1]<< " "<<calibrated_JTS_RA[2]<<endl;
+				// prepare a message to send
+    			Bottle&out_RA = outputPort_RA.prepare();
+    			out_RA.clear();
+    			out_RA.addDouble(calibrated_JTS_RA[0]);
+    			out_RA.addDouble(calibrated_JTS_RA[1]);
+    			out_RA.addDouble(calibrated_JTS_RA[2]);
+   			//printf("Sending %s\n", out_RA.toString().c_str());
+    			// send the message
+    			outputPort_RA.write(true);
     		}
     
 
     		Bottle* in_LA;
-    		in_LA=inputPort_LA.read(true);
+    		in_LA=inputPort_LA.read(false);
     		if (in_LA==NULL) {
-      			fprintf(stderr, "Failed to read left arm JTS values\n");
-      			return;
+      			//fprintf(stderr, "Failed to read left arm JTS values\n");
+      			//return;
     		}else{
 			for(int i=0; i<3;i++){
 				calibrated_JTS_LA[i]=((*in_LA).get(i).asDouble()-_offsetLA[i])*_gainLA[i];
 			}
-    			cout<<"Left Arm Joint Torque Sensors calibrated values = "<< calibrated_JTS_LA[0]<< " "<<calibrated_JTS_LA[1]<< " "<<calibrated_JTS_LA[2]<<endl;
+    			//cout<<"Left Arm Joint Torque Sensors calibrated values = "<< calibrated_JTS_LA[0]<< " "<<calibrated_JTS_LA[1]<< " "<<calibrated_JTS_LA[2]<<endl;
+				Bottle&out_LA = outputPort_LA.prepare();
+	    		out_LA.clear();
+	    		out_LA.addDouble(calibrated_JTS_LA[0]);
+	    		out_LA.addDouble(calibrated_JTS_LA[1]);
+	   		out_LA.addDouble(calibrated_JTS_LA[2]);
+	   		//printf("Sending %s\n", out_LA.toString().c_str());
+	    		// send the message
+	    		outputPort_LA.write(true);
     		}
 	
-		Bottle* in_RL;
-    		in_RL=inputPort_RL.read(true);
-    		if (in_RL==NULL) {
-      			fprintf(stderr, "Failed to read right leg JTS values\n");
-      			return;
+		Bottle* in_RUL;
+    		in_RUL=inputPort_RUL.read(false);
+    		if (in_RUL==NULL) {
+      			//fprintf(stderr, "Failed to read right leg JTS values\n");
+      			//return;
     		}else{
 			for(int i=0; i<3;i++){
-				calibrated_JTS_RL[i]=((*in_RL).get(i).asDouble()-_offsetRL[i])*_gainRL[i];
+				calibrated_JTS_RUL[i]=((*in_RUL).get(i).asDouble()-_offsetRUL[i])*_gainRUL[i];
 			}
-    			cout<<"Right Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_RL[0]<< " "<<calibrated_JTS_RL[1]<< " "<<calibrated_JTS_RL[2]<<endl;
+    			//cout<<"Right Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_RUL[0]<< " "<<calibrated_JTS_RUL[1]<< " "<<calibrated_JTS_RUL[2]<<endl;
+				// prepare a message to send
+    			Bottle&out_RUL = outputPort_RUL.prepare();
+   	 		out_RUL.clear();
+   	 		out_RUL.addDouble(calibrated_JTS_RUL[0]);
+    			out_RUL.addDouble(calibrated_JTS_RUL[1]);
+   	 		out_RUL.addDouble(calibrated_JTS_RUL[2]);
+   			//printf("Sending %s\n", out_RUL.toString().c_str());
+	    		// send the message
+   	 		outputPort_RUL.write(true);
     		}
     
 
-    		Bottle* in_LL;
-    		in_LL=inputPort_LL.read(true);
-    		if (in_LL==NULL) {
-      			fprintf(stderr, "Failed to read left arm JTS values\n");
-      			return;
+    		Bottle* in_LUL;
+    		in_LUL=inputPort_LUL.read(true);
+    		if (in_LUL==NULL) {
+      			//fprintf(stderr, "Failed to read left arm JTS values\n");
+      			//return;
     		}else{
 			for(int i=0; i<3;i++){
-				calibrated_JTS_LL[i]=((*in_LL).get(i).asDouble()-_offsetLL[i])*_gainLL[i];
+				calibrated_JTS_LUL[i]=((*in_LUL).get(i).asDouble()-_offsetLUL[i])*_gainLUL[i];
 			}
-    			cout<<"Left Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_LL[0]<< " "<<calibrated_JTS_LL[1]<< " "<<calibrated_JTS_LL[2]<<endl;
+    			//cout<<"Left Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_LUL[0]<< " "<<calibrated_JTS_LUL[1]<< " "<<calibrated_JTS_LUL[2]<<endl;
+				
+    			Bottle&out_LUL = outputPort_LUL.prepare();
+    			out_LUL.clear();
+    			out_LUL.addDouble(calibrated_JTS_LUL[0]);
+    			out_LUL.addDouble(calibrated_JTS_LUL[1]);
+   			out_LUL.addDouble(calibrated_JTS_LUL[2]);
+   			//printf("Sending %s\n", out_LUL.toString().c_str());
+    			// send the message
+    			outputPort_LUL.write(true);
+    		}
+
+			Bottle* in_RLL;
+    		in_RLL=inputPort_RLL.read(false);
+    		if (in_RLL==NULL) {
+      			//fprintf(stderr, "Failed to read right leg JTS values\n");
+      			//return;
+    		}else{
+			for(int i=0; i<3;i++){
+				calibrated_JTS_RLL[i]=((*in_RLL).get(i).asDouble()-_offsetRLL[i])*_gainRLL[i];
+			}
+    			//cout<<"Right Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_RLL[0]<< " "<<calibrated_JTS_RLL[1]<< " "<<calibrated_JTS_RLL[2]<<endl;
+				// prepare a message to send
+    			Bottle&out_RLL = outputPort_RLL.prepare();
+   	 		out_RLL.clear();
+   	 		out_RLL.addDouble(calibrated_JTS_RLL[0]);
+    			out_RLL.addDouble(calibrated_JTS_RLL[1]);
+   	 		out_RLL.addDouble(calibrated_JTS_RLL[2]);
+   			//printf("Sending %s\n", out_RLL.toString().c_str());
+	    		// send the message
+   	 		outputPort_RLL.write(true);
+    		}
+    
+
+    		Bottle* in_LLL;
+    		in_LLL=inputPort_LLL.read(true);
+    		if (in_LLL==NULL) {
+      			//fprintf(stderr, "Failed to read left arm JTS values\n");
+      			//return;
+    		}else{
+			for(int i=0; i<3;i++){
+				calibrated_JTS_LLL[i]=((*in_LLL).get(i).asDouble()-_offsetLLL[i])*_gainLLL[i];
+			}
+    			//cout<<"Left Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_LUL[0]<< " "<<calibrated_JTS_LUL[1]<< " "<<calibrated_JTS_LUL[2]<<endl;
+				
+    			Bottle&out_LLL = outputPort_LLL.prepare();
+    			out_LLL.clear();
+    			out_LLL.addDouble(calibrated_JTS_LLL[0]);
+    			out_LLL.addDouble(calibrated_JTS_LLL[1]);
+   			out_LLL.addDouble(calibrated_JTS_LLL[2]);
+   			//printf("Sending %s\n", out_LUL.toString().c_str());
+    			// send the message
+    			outputPort_LLL.write(true);
     		}
     
 		/*************************** faire plutôt une fonction que de la répétition... pareil pour au-dessus *************************/
-    		// prepare a message to send
-    		Bottle&out_RA = outputPort_RA.prepare();
-    		out_RA.clear();
-    		out_RA.addDouble(calibrated_JTS_RA[0]);
-    		out_RA.addDouble(calibrated_JTS_RA[1]);
-    		out_RA.addDouble(calibrated_JTS_RA[2]);
-   		printf("Sending %s\n", out_RA.toString().c_str());
-    		// send the message
-    		outputPort_RA.write(true);
+    		
 
 
-    		Bottle&out_LA = outputPort_LA.prepare();
-    		out_LA.clear();
-    		out_LA.addDouble(calibrated_JTS_LA[0]);
-    		out_LA.addDouble(calibrated_JTS_LA[1]);
-   		out_LA.addDouble(calibrated_JTS_LA[2]);
-   		printf("Sending %s\n", out_LA.toString().c_str());
-    		// send the message
-    		outputPort_LA.write(true);
+    		
 
-		// prepare a message to send
-    		Bottle&out_RL = outputPort_RL.prepare();
-    		out_RL.clear();
-    		out_RL.addDouble(calibrated_JTS_RL[0]);
-    		out_RL.addDouble(calibrated_JTS_RL[1]);
-    		out_RL.addDouble(calibrated_JTS_RL[2]);
-   		printf("Sending %s\n", out_RL.toString().c_str());
-    		// send the message
-    		outputPort_RL.write(true);
+		
 
 
-    		Bottle&out_LL = outputPort_LL.prepare();
-    		out_LL.clear();
-    		out_LL.addDouble(calibrated_JTS_LL[0]);
-    		out_LL.addDouble(calibrated_JTS_LL[1]);
-   		out_LL.addDouble(calibrated_JTS_LL[2]);
-   		printf("Sending %s\n", out_LL.toString().c_str());
-    		// send the message
-    		outputPort_LL.write(true);
 
     	}  //while
 }
@@ -193,21 +268,29 @@ void JTSCalibrationThread::threadRelease() {
 void JTSCalibrationThread::onStop() {
     	inputPort_RA.interrupt();
     	inputPort_LA.interrupt();
-	inputPort_RL.interrupt();
-    	inputPort_LL.interrupt();
-	outputPort_RA.interrupt();
+		inputPort_RUL.interrupt();
+    	inputPort_LUL.interrupt();
+		inputPort_RLL.interrupt();
+    	inputPort_LLL.interrupt();
+		outputPort_RA.interrupt();
     	outputPort_LA.interrupt();
-	outputPort_RL.interrupt();
-    	outputPort_LL.interrupt();
+		outputPort_RUL.interrupt();
+    	outputPort_LUL.interrupt();
+		outputPort_RLL.interrupt();
+    	outputPort_LLL.interrupt();
   
-	inputPort_RA.close();
+		inputPort_RA.close();
     	inputPort_LA.close();
-	inputPort_RL.close();
-    	inputPort_LL.close();
-	outputPort_RA.close();
+		inputPort_RUL.close();
+    	inputPort_LUL.close();
+		inputPort_RLL.close();
+    	inputPort_LLL.close();
+		outputPort_RA.close();
     	outputPort_LA.close();
-	outputPort_RL.close();
-    	outputPort_LL.close();
+		outputPort_RUL.close();
+    	outputPort_LUL.close();
+		outputPort_RLL.close();
+    	outputPort_LLL.close();
 }
 
 void JTSCalibrationThread::bias() {
@@ -232,23 +315,43 @@ void JTSCalibrationThread::bias() {
 		}
 	}
 
-	in=inputPort_RL.read(true);
+	in=inputPort_RUL.read(true);
     	if (in==NULL) {
-      		fprintf(stderr, "Failed to read right leg JTS values\n");
+      		fprintf(stderr, "Failed to read right upper leg JTS values\n");
       		return;
     	}else{
 		for(int i=0;i<3;i++){
-			_offsetRL[i]=(*in).get(i).asDouble();
+			_offsetRUL[i]=(*in).get(i).asDouble();
 		}
 	}
 
-	in=inputPort_LL.read(true);
+	in=inputPort_LUL.read(true);
     	if (in==NULL) {
-      		fprintf(stderr, "Failed to read left leg JTS values\n");
+      		fprintf(stderr, "Failed to read left upper leg JTS values\n");
       		return;
     	}else{
 		for(int i=0;i<3;i++){
-			_offsetLL[i]=(*in).get(i).asDouble();
+			_offsetLUL[i]=(*in).get(i).asDouble();
+		}
+	}
+
+	in=inputPort_RLL.read(true);
+    	if (in==NULL) {
+      		fprintf(stderr, "Failed to read right lower leg JTS values\n");
+      		return;
+    	}else{
+		for(int i=0;i<3;i++){
+			_offsetRLL[i]=(*in).get(i).asDouble();
+		}
+	}
+
+	in=inputPort_LLL.read(true);
+    	if (in==NULL) {
+      		fprintf(stderr, "Failed to read left lower leg JTS values\n");
+      		return;
+    	}else{
+		for(int i=0;i<3;i++){
+			_offsetLLL[i]=(*in).get(i).asDouble();
 		}
 	}
 	

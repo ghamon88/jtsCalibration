@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 
     rf->setVerbose(true);
     rf->setDefaultConfigFile("default.ini");         //default config file name.
-    rf->setDefaultContext("jtsCalibration/conf"); //when no parameters are given to the module this is the default context
+    rf->setDefaultContext("jtsCalibration"); //when no parameters are given to the module this is the default context
 
     rf->configure("ICUB_ROOT",argc,argv);
 
