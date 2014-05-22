@@ -4,7 +4,7 @@ using namespace yarp::os;
 using namespace yarp::sig;
 using namespace std;
 
-					
+
 JTSCalibrationThread::JTSCalibrationThread(std::string& threadName, std::string& robotName,int periodMilliseconds,
 						std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RUL,std::string& inputPortName_LUL,std::string& inputPortName_RLL,std::string& inputPortName_LLL,std::string& inputPortName_T,
 						std::string& outputPortName_RA,std::string& outputPortName_LA,std::string& outputPortName_RUL,std::string& outputPortName_LUL,std::string& outputPortName_RLL,std::string& outputPortName_LLL,std::string& outputPortName_T,
@@ -41,7 +41,7 @@ _offsetLUL(OffsetLUL),
 _offsetRLL(OffsetRLL),
 _offsetLLL(OffsetLLL),
 _offsetT(OffsetT)
-{   
+{
 
 }
 
@@ -105,7 +105,6 @@ bool JTSCalibrationThread::threadInit() {
 		return false;  
     	}
 
-    	return true;
 	if(!outputPort_RLL.open(("/" + _threadName + _outputPortName_RLL).c_str())){
 		cout  << ": unable to open output port RLL" <<  endl;
 		return false;  
