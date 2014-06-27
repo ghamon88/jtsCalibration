@@ -1,0 +1,301 @@
+<application>
+<name>Joint Torque Sensor Calibration - macsi04 </name>
+<dependencies>
+	<port>/icub/joint_torque_sensor/right_arm/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_arm/analog:o</port>
+	<port>/icub/joint_torque_sensor/right_upper_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_upper_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/right_lower_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/left_lower_leg/analog:o</port>
+	<port>/icub/joint_torque_sensor/torso/analog:o</port>
+	<port>/WholeBodyDynamics/right_arm/Torques:o</port>
+	<port>/WholeBodyDynamics/left_arm/Torques:o</port>
+	<port>/WholeBodyDynamics/right_leg/Torques:o</port>
+	<port>/WholeBodyDynamics/left_leg/Torques:o</port>
+	<port>/WholeBodyDynamics/torso/Torques:o</port>
+</dependencies>
+
+<module>
+	<name>jtsCalibration</name>
+	<node>macsi04</node>
+	<stdio>macsi03</stdio>
+	<tag>jointSensorsCalibration</tag>
+</module>
+
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightARM/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RA-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftARM/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LA-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightUpperLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RUL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftUpperLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LUL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightLowerLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RLL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftLowerLEG/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LLL-jts-raw</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/torso/raw --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>torso-jts-raw</tag>
+</module>
+<!-- dump log calibrated-->
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightARM/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RA-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftARM/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LA-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightUpperLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RUL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftUpperLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LUL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/rightLowerLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>RLL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/leftLowerLEG/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>LLL-jts-calibrated</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /dump_JTS/torso/calibrated --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>torso-jts-calibrated</tag>
+</module>
+
+<!-- dataDumpers idyn values -->
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /idyn_torque/right_arm --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>right-arm-idyn,</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /idyn_torque/left_arm --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>left-arm-idyn</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /idyn_torque/right_leg --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>right-leg-idyn</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /idyn_torque/left_leg --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>left-leg-idyn</tag>
+</module>
+<module>
+	<name>dataDumper</name>
+	<parameters>--name /idyn_torque/torso --type bottle --rxTime</parameters>
+	<node>macsi03</node>
+	<stdio>macsi03</stdio>
+	<tag>torso-idyn</tag>
+</module>
+
+
+<!-- JTS connections -->
+<connection>
+  <from>/icub/joint_torque_sensor/right_arm/analog:o</from>
+  <to>/JTSCalibration/right_arm/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_arm/analog:o</from>
+  <to>/JTSCalibration/left_arm/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_upper_leg/analog:o</from>
+  <to>/JTSCalibration/right_upper_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_upper_leg/analog:o</from>
+  <to>/JTSCalibration/left_upper_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_lower_leg/analog:o</from>
+  <to>/JTSCalibration/right_lower_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_lower_leg/analog:o</from>
+  <to>/JTSCalibration/left_lower_leg/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/torso/analog:o</from>
+  <to>/JTSCalibration/torso/raw:i</to>
+  <protocol>udp</protocol>
+</connection>
+
+<!-- datadumper connections -->
+<connection>
+  <from>/icub/joint_torque_sensor/right_arm/analog:o</from>
+  <to>/dump_JTS/rightARM/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_arm/analog:o</from>
+  <to>/dump_JTS/leftARM/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_upper_leg/analog:o</from>
+  <to>/dump_JTS/rightUpperLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_upper_leg/analog:o</from>
+  <to>/dump_JTS/leftUpperLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/right_lower_leg/analog:o</from>
+  <to>/dump_JTS/rightLowerLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/left_lower_leg/analog:o</from>
+  <to>/dump_JTS/leftLowerLEG/raw</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/icub/joint_torque_sensor/torso/analog:o</from>
+  <to>/dump_JTS/torso/raw</to>
+  <protocol>udp</protocol>
+</connection>
+
+<connection>
+  <from>/JTSCalibration/right_arm/calibrated:o</from>
+  <to>/dump_JTS/rightARM/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/left_arm/calibrated:o</from>
+  <to>/dump_JTS/leftARM/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/right_upper_leg/calibrated:o</from>
+  <to>/dump_JTS/rightUpperLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/left_upper_leg/calibrated:o</from>
+  <to>/dump_JTS/leftUpperLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/right_lower_leg/calibrated:o</from>
+  <to>/dump_JTS/rightLowerLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/left_lower_leg/calibrated:o</from>
+  <to>/dump_JTS/leftLowerLEG/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/JTSCalibration/torso/calibrated:o</from>
+  <to>/dump_JTS/torso/calibrated</to>
+  <protocol>udp</protocol>
+</connection>
+
+<connection>
+  <from>/WholeBodyDynamics/right_arm/Torques:o</from>
+  <to>/idyn_torque/right_arm</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/WholeBodyDynamics/left_arm/Torques:o</from>
+  <to>/idyn_torque/left_arm</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/WholeBodyDynamics/left_leg/Torques:o</from>
+  <to>/idyn_torque/left_leg</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/WholeBodyDynamics/right_leg/Torques:o</from>
+  <to>/idyn_torque/right_leg</to>
+  <protocol>udp</protocol>
+</connection>
+<connection>
+  <from>/WholeBodyDynamics/torso/Torques:o</from>
+  <to>/idyn_torque/torso</to>
+  <protocol>udp</protocol>
+</connection>
+
+</application>
+
+
