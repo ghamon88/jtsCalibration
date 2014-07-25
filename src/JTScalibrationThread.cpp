@@ -140,7 +140,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<3;i++){
-				calibrated_JTS_RA[i]=((*in_RA).get(i).asDouble()-_offsetRA[i])*_gainRA[i];
+				calibrated_JTS_RA[i]=((*in_RA).get(i).asDouble()*_gainRA[i])-_offsetRA[i];
 			}
     			//cout<<"Right Arm Joint Torque Sensors calibrated values = "<< calibrated_JTS_RA[0]<< " "<<calibrated_JTS_RA[1]<< " "<<calibrated_JTS_RA[2]<<endl;
 				// prepare a message to send
@@ -162,7 +162,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<3;i++){
-				calibrated_JTS_LA[i]=((*in_LA).get(i).asDouble()-_offsetLA[i])*_gainLA[i];
+				calibrated_JTS_LA[i]=((*in_LA).get(i).asDouble()*_gainLA[i])-_offsetLA[i];
 			}
     			//cout<<"Left Arm Joint Torque Sensors calibrated values = "<< calibrated_JTS_LA[0]<< " "<<calibrated_JTS_LA[1]<< " "<<calibrated_JTS_LA[2]<<endl;
 				Bottle&out_LA = outputPort_LA.prepare();
@@ -182,7 +182,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<2;i++){
-				calibrated_JTS_RUL[i]=((*in_RUL).get(i).asDouble()-_offsetRUL[i])*_gainRUL[i];
+				calibrated_JTS_RUL[i]=((*in_RUL).get(i).asDouble()*_gainRUL[i])-_offsetRUL[i];
 			}
     			//cout<<"Right Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_RUL[0]<< " "<<calibrated_JTS_RUL[1]<< " "<<calibrated_JTS_RUL[2]<<endl;
 				// prepare a message to send
@@ -203,7 +203,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<2;i++){
-				calibrated_JTS_LUL[i]=((*in_LUL).get(i).asDouble()-_offsetLUL[i])*_gainLUL[i];
+				calibrated_JTS_LUL[i]=((*in_LUL).get(i).asDouble()*_gainLUL[i])-_offsetLUL[i];
 			}
     			//cout<<"Left Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_LUL[0]<< " "<<calibrated_JTS_LUL[1]<< " "<<calibrated_JTS_LUL[2]<<endl;
 				
@@ -223,7 +223,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<2;i++){
-				calibrated_JTS_RLL[i]=((*in_RLL).get(i).asDouble()-_offsetRLL[i])*_gainRLL[i];
+				calibrated_JTS_RLL[i]=((*in_RLL).get(i).asDouble()*_gainRLL[i])-_offsetRLL[i];
 			}
     			//cout<<"Right Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_RLL[0]<< " "<<calibrated_JTS_RLL[1]<< " "<<calibrated_JTS_RLL[2]<<endl;
 				// prepare a message to send
@@ -244,7 +244,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<2;i++){
-				calibrated_JTS_LLL[i]=((*in_LLL).get(i).asDouble()-_offsetLLL[i])*_gainLLL[i];
+				calibrated_JTS_LLL[i]=((*in_LLL).get(i).asDouble()*_gainLLL[i])-_offsetLLL[i];
 			}
     			//cout<<"Left Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_LUL[0]<< " "<<calibrated_JTS_LUL[1]<< " "<<calibrated_JTS_LUL[2]<<endl;
 				
@@ -264,7 +264,7 @@ void JTSCalibrationThread::run() {
       			//return;
     		}else{
 			for(int i=0; i<2;i++){
-				calibrated_JTS_T[i]=((*in_T).get(i).asDouble()-_offsetT[i])*_gainT[i];
+				calibrated_JTS_T[i]=((*in_T).get(i).asDouble()*_gainT[i])-_offsetT[i];
 			}
     			//cout<<"Left Leg Joint Torque Sensors calibrated values = "<< calibrated_JTS_T[0]<< " "<<calibrated_JTS_T[1]<< endl;
 				
