@@ -29,6 +29,11 @@ private:
 	std::string& _inputPortName_RLL;
 	std::string& _inputPortName_LLL;
 	std::string& _inputPortName_T;
+	std::string& _inputPortName_idyn_RA;
+	std::string& _inputPortName_idyn_LA;
+	std::string& _inputPortName_idyn_RL;
+	std::string& _inputPortName_idyn_LL;
+	std::string& _inputPortName_idyn_T;
 	std::string& _outputPortName_RA;
 	std::string& _outputPortName_LA;
 	std::string& _outputPortName_RUL;
@@ -61,7 +66,7 @@ private:
 	double calibrated_JTS_LLL[2];
 	double calibrated_JTS_T[2];
 
-   	yarp::os::BufferedPort<yarp::os::Bottle> inputPort_RA, inputPort_LA, inputPort_RUL, inputPort_LUL, inputPort_RLL, inputPort_LLL, inputPort_T;
+   	yarp::os::BufferedPort<yarp::os::Bottle> inputPort_RA, inputPort_LA, inputPort_RUL, inputPort_LUL, inputPort_RLL, inputPort_LLL, inputPort_T, inputPort_idyn_RA, inputPort_idyn_LA, inputPort_idyn_RL, inputPort_idyn_LL, inputPort_idyn_T;
 	yarp::os::BufferedPort<yarp::os::Bottle> outputPort_RA, outputPort_LA, outputPort_RUL, outputPort_LUL, outputPort_RLL, outputPort_LLL, outputPort_T;
 
 public:
@@ -72,7 +77,7 @@ public:
    JTSCalibrationThread(std::string& threadName,
                               	std::string& robotName,
                               	int periodMilliseconds,
-                              	std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RUL,std::string& inputPortName_LUL,std::string& inputPortName_RLL,std::string& inputPortName_LLL,std::string& inputPortName_T,
+                              	std::string& inputPortName_RA,std::string& inputPortName_LA,std::string& inputPortName_RUL,std::string& inputPortName_LUL,std::string& inputPortName_RLL,std::string& inputPortName_LLL,std::string& inputPortName_T,std::string& inputPortName_idyn_RA,std::string& inputPortName_idyn_LA,std::string& inputPortName_idyn_RL,std::string& inputPortName_idyn_LL,std::string& inputPortName_idyn_T,
 				std::string& outputPortName_RA,std::string& outputPortName_LA,std::string& outputPortName_RUL,std::string& outputPortName_LUL,std::string& outputPortName_RLL,std::string& outputPortName_LLL,std::string& outputPortName_T,
 				Vector GainRA,Vector GainLA,Vector GainRUL,Vector GainLUL,Vector GainRLL,Vector GainLLL,Vector GainT,
 				Vector OffsetRA,Vector OffsetLA,Vector OffsetRUL,Vector OffsetLUL,Vector OffsetRLL,Vector OffsetLLL,Vector OffsetT);

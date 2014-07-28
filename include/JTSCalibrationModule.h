@@ -31,6 +31,11 @@ class JTSCalibrationModule : public yarp::os::RFModule {
 	std::string inputPortName_RLL;
     	std::string inputPortName_LLL;
 	std::string inputPortName_T;
+	std::string inputPortName_idyn_RA;
+    	std::string inputPortName_idyn_LA;
+	std::string inputPortName_idyn_RL;
+    	std::string inputPortName_idyn_LL;
+	std::string inputPortName_idyn_T;
 
     	std::string outputPortName_RA;
     	std::string outputPortName_LA;

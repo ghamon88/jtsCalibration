@@ -1,3 +1,8 @@
+/*
+ * Author: Guillaume Hamon, ISIR , 2014
+*/
+
+
 #include "JTSCalibrationModule.h"
 #include "JTScalibrationThread.h"
 
@@ -8,12 +13,6 @@ using namespace yarp::os;
 using namespace yarp::sig;
 using namespace std;
 
-/* 
- * Configure method. Receive a previously initialized
- * resource finder object. Use it to configure your module.
- * If you are migrating from the old Module, this is the 
- * equivalent of the "open" method.
- */
 
 bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {    
 
@@ -34,7 +33,7 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 
 	Bottle &bGeneral=rf.findGroup("general");
 	macsi::modHelp::readString(bGeneral,"name",_moduleName,"JTSCalib");
-   macsi::modHelp::readString(bGeneral,"robot",_robotName,"icub");	
+   	macsi::modHelp::readString(bGeneral,"robot",_robotName,"icub");	
 	macsi::modHelp::readInt(bGeneral,"period",_period,10);
 
 	std::cout<<_moduleName<<std::endl;
@@ -55,8 +54,6 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	macsi::modHelp::readVector(bGains,"OffsetLLL",_offsetLLL,2);
 	macsi::modHelp::readVector(bGains,"OffsetT",_offsetT,2);
 
-	std::cout<<"gains et offsets ok"<<std::endl;
-
 	Bottle &bPorts=rf.findGroup("ports");
 
 	macsi::modHelp::readString(bPorts,"InputPortRightArm",inputPortName_RA,"/right_arm/raw:i");	
@@ -66,6 +63,11 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	macsi::modHelp::readString(bPorts,"InputPortRightLowerLeg",inputPortName_RLL,"/right_lower_leg/raw:i");	
 	macsi::modHelp::readString(bPorts,"InputPortLeftLowerLeg",inputPortName_LLL,"/left_lower_leg/raw:i");	
 	macsi::modHelp::readString(bPorts,"InputPortTorso",inputPortName_T,"/torso/raw:i");	
+	macsi::modHelp::readString(bPorts,"InputPortIdynRightArm",inputPortName_idyn_RA,"/right_arm/Torques:i");	
+	macsi::modHelp::readString(bPorts,"InputPortIdynLeftArm",inputPortName_idyn_LA,"/left_arm/Torques:i");	
+	macsi::modHelp::readString(bPorts,"InputPortIdynRightLeg",inputPortName_idyn_RL,"/right_leg/Torques:i");	
+	macsi::modHelp::readString(bPorts,"InputPortIdynLeftLeg",inputPortName_idyn_LL,"/left_leg/Torques:i");	
+	macsi::modHelp::readString(bPorts,"InputPortIdynTorso",inputPortName_idyn_T,"/torso/Torques:i");	
 
 	macsi::modHelp::readString(bPorts,"OutputPortRightArm",outputPortName_RA,"/right_arm/calibrated:o");	
 	macsi::modHelp::readString(bPorts,"OutputPortLeftArm",outputPortName_LA,"/left_arm/calibrated:o");	
@@ -84,6 +86,7 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
     	* attach a port of the same name as the module (prefixed with a /) to the module
     	* so that messages received from the port are redirected to the respond method
     	*/
+
     	handlerPortName =  "/";
     	handlerPortName += getName();         // use getName() rather than a literal 
 
@@ -98,6 +101,7 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
 	//--------------------------CONTROL THREAD--------------------------
         _jtscalibrationThread = new JTSCalibrationThread(_moduleName,_robotName,_period,
 						inputPortName_RA,inputPortName_LA,inputPortName_RUL,inputPortName_LUL,inputPortName_RLL,inputPortName_LLL,inputPortName_T,
+						inputPortName_idyn_RA,inputPortName_idyn_LA,inputPortName_idyn_RL,inputPortName_idyn_LL,inputPortName_idyn_T,
 						outputPortName_RA,outputPortName_LA,outputPortName_RUL,outputPortName_LUL,outputPortName_RLL,outputPortName_LLL,outputPortName_T,
                                                 _gainRA,_gainLA,_gainRUL,_gainLUL,_gainRLL,_gainLLL,_gainT,
 						_offsetRA,_offsetLA,_offsetRUL,_offsetLUL,_offsetRLL,_offsetLLL,_offsetT);
@@ -105,7 +109,6 @@ bool JTSCalibrationModule::configure(yarp::os::ResourceFinder &rf) {
           //  error_out("Error while initializing control thread. Closing module.\n");
             return false;
         }
-        //_controlThread->setInitialConditions(_initialPiHat, _initialXi1);
         
         //info_out("JTS Calibration module correctly initialized\n");
         return true;
@@ -127,7 +130,7 @@ bool JTSCalibrationModule::close() {
         	_jtscalibrationThread = NULL;
 	}
 
-	//closing ports de communication avec le module (commandes), pour le thread le faire dans thread-->release
+
 	handlerPort.close();
 	//info_out("about to close\n");
     	return true;
@@ -138,7 +141,7 @@ bool JTSCalibrationModule::respond(const Bottle& command, Bottle& reply) {
                         " commands are: \n" +  
                         "help \n" + 
                         "quit \n" + 
-                        "bias ... set the JTS current values as offsets  \n";
+                        "bias ... computes the new offset values online  \n";
 
   reply.clear(); 
 
@@ -152,7 +155,7 @@ bool JTSCalibrationModule::respond(const Bottle& command, Bottle& reply) {
    }
    else if (command.get(0).asString()=="bias") {
       	_jtscalibrationThread->bias();
-         reply.addString("bias ok");
+         reply.addString("bias done");
       
    }
    return true;
@@ -164,7 +167,6 @@ bool JTSCalibrationModule::updateModule() {
           //  error_out("%s: Error. Control thread pointer is zero.\n", _moduleName.c_str());
             return false;
         }
-// tester le tps d'exécution, période ??
     	return true;
 }
 
